@@ -39,6 +39,7 @@ setup(
     version=find_version(),
     description='pathlib with regular expressions',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Matthew Badger',
     url='https://repathlib.readthedocs.io/en/latest/',
     packages=find_packages()
