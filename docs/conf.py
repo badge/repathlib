@@ -19,16 +19,14 @@
 
 # -- Project information -----------------------------------------------------
 
-import repathlib
-
 project = 'repathlib'
 copyright = '2019, Matthew Badger'
 author = 'Matthew Badger'
 
 # The short X.Y version
-version = repathlib.__version__
+version = '0.1'
 # The full version, including alpha/beta/rc tags
-release = repathlib.__version__
+release = '0.1.0'
 
 
 # -- General configuration ---------------------------------------------------
