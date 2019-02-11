@@ -29,13 +29,16 @@ def _create_search_match(func: str):
         """Pass the given pattern, part and flags to ``func``
         """
 
-        # Get the string we want to search or match
-        if part == 'full':
-            string = str(self)
-        elif part == 'suffixes':
-            string = '.'.join(self.suffixes)
-        else:
-            string = str(getattr(self, part))
+        # Define the special cases for ``part``
+        parts_dict = {
+            'full': str(self),
+            'suffixes': '.'.join(self.suffixes),
+            'resolved': str(self.resolve())
+        }
+
+        # Get the string we need to search--either a special case
+        # or the ``part`` attribute of the instance
+        string = parts_dict.get(part, str(getattr(self, part)))
 
         if isinstance(pattern, str):
             return getattr(re, func)(pattern, string, flags)
@@ -47,10 +50,12 @@ def _create_search_match(func: str):
     ----------
     pattern : Union[str, Pattern]
         Regular expression string, or a compiled regular expression
-    part : str, optional {{'name', 'full', 'suffix', 'suffixes', 'parent', 'stem'}}, default 'name'
-        Part of the Path to search; ``full`` is the complete path,
-        ``suffixes`` is all suffixes joined with `.`, and the remaining
-        options are exactly that property or attribute of the Path 
+    part : str, optional {{'name', 'full', 'suffix', 'suffixes', 'parent', 'stem', 'resolved'}}, default 'name'
+        Part of the Path to search; ``full`` is the complete (but
+        unresolved) path, ``suffixes`` is all suffixes joined with
+        ``.``, ``resolved`` is the complete resolved path, and the
+        remaining options are exactly that property or attribute of
+        the Path
     flags : int, optional, default 0
         Flags passed to {}
         
@@ -99,11 +104,14 @@ class RePath(pathlib.Path):
         ----------
         pattern : str, default None
             Regular expression string, or a compiled regular expression
-        method : str, optional {'search', 'match', 'fullmatch',
-            'findall', 'finditer'}, default 'search'
+        method : str, optional {'search', 'match', 'fullmatch', 'findall', 'finditer'}, default 'search'
             Method from ``re`` to use
-        part : str, optional {'name', 'full', 'suffix', 'suffixes', 'parent', 'stem'}, default 'name'
-            Part of the Path to search
+        part : str, optional {'name', 'full', 'suffix', 'suffixes', 'parent', 'stem', 'resolved'}, default 'name'
+            Part of the Path to search; ``full`` is the complete (but
+            unresolved) path, ``suffixes`` is all suffixes joined with
+            ``.``, ``resolved`` is the complete resolved path, and the
+            remaining options are exactly that property or attribute of
+            the Path
         yield_type : str, optional ['path', 'match', 'tuple'], default 'path'
             Yield type of the generator. If ``path``, returns the Path
             object; if ``match``, returns the re.Match object; if
@@ -124,13 +132,11 @@ class RePath(pathlib.Path):
         else:
             for path in super().iterdir():
                 match = getattr(path, method)(pattern, part, flags)
-                if match:
-                    if yield_type == 'path':
-                        yield path
-                    elif yield_type == 'match':
-                        yield match
-                    elif yield_type == 'tuple':
-                        yield (path, match)
+                yield {
+                    'path': path,
+                    'match': match,
+                    'tuple': (path, match)
+                }[yield_type]
 
 
 class PosixPath(pathlib.PosixPath, RePath):

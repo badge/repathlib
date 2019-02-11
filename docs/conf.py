@@ -23,10 +23,12 @@ project = 'repathlib'
 copyright = '2019, Matthew Badger'
 author = 'Matthew Badger'
 
+import repathlib
+
 # The short X.Y version
-version = '0.1'
+version = repathlib.__version__
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = repathlib.__version__
 
 
 # -- General configuration ---------------------------------------------------
