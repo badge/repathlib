@@ -127,6 +127,9 @@ class RePath(pathlib.Path):
             'tuple', yields a tuple of path and match
         """
 
+        # Rename `match` to `match_`
+        method = 'match_' if method == 'match' else method
+
         if pattern is None:
             yield from super().iterdir()
         else:
