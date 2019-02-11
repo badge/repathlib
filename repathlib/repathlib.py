@@ -132,11 +132,12 @@ class RePath(pathlib.Path):
         else:
             for path in super().iterdir():
                 match = getattr(path, method)(pattern, part, flags)
-                yield {
-                    'path': path,
-                    'match': match,
-                    'tuple': (path, match)
-                }[yield_type]
+                if match:
+                    yield {
+                        'path': path,
+                        'match': match,
+                        'tuple': (path, match)
+                    }[yield_type]
 
 
 class PosixPath(pathlib.PosixPath, RePath):
