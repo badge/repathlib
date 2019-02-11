@@ -7,6 +7,9 @@ from repathlib import Path
 from setuptools import find_packages, setup
 
 
+long_description = Path('README.md').read_text()
+
+
 def find_version():
     """Get the current version of the package
 
@@ -35,6 +38,7 @@ setup(
     name='repathlib',
     version=find_version(),
     description='pathlib with regular expressions',
+    long_description=long_description,
     author='Matthew Badger',
     url='https://repathlib.readthedocs.io/en/latest/',
     packages=find_packages()
