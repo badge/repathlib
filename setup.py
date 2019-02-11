@@ -36,6 +36,6 @@ setup(
     version=find_version(),
     description='pathlib with regular expressions',
     author='Matthew Badger',
-    url='https://github.com/badge/',
+    url='https://repathlib.readthedocs.io/en/latest/',
     packages=find_packages()
 )
